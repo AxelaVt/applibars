@@ -1,23 +1,27 @@
+
 import React from 'react'
 import { StyleSheet, Image } from 'react-native';
 import { createAppContainer } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
-
-const StackNavigator = createStackNavigator({
-
-    
-        Display: {
-            screen: Display,
-            navigationOptions: {
-                title: 'Liste des Bars'
-            }
-        },
-        BarDetail: {
-            screen: BarDetail
-        }
-    
+import BarsList from '../Components/BarsList'
+import BarDetails from '../Components/BarDetails'
 
 
-})
-export default createAppContainer(StackNavigator)
+const Stack = createStackNavigator();
+
+
+ function Nav() {
+
+        return(
+            
+                <Stack.Navigator>
+                    <Stack.Screen name="Home" component={BarsList} />
+                    <Stack.Screen name="BarDetails" component={BarDetails}/>
+                </Stack.Navigator>
+            
+        );
+    }
+        
+export default Nav()

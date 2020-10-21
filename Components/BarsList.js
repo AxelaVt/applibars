@@ -1,8 +1,7 @@
 
 import React from 'react'
-import { StyleSheet, FlatList, Text, View, SafeAreaView, StatusBar, Image } from 'react-native'
+import { StyleSheet, FlatList, Text, View, ScrollView, StatusBar, Image } from 'react-native'
 import bars from '../Helpers/bars'
-//import films from '../Helpers/filmsData'
 import BarItem from './BarItem'
 
 
@@ -12,12 +11,16 @@ class BarsList extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            titre: "Liste des bars"
-
+            titre: "Never'sBar"
         }
     }
-
-
+    
+    _displayDetailBar = (idBar) => {
+        console.log("Display bar " + idBar)
+        this.props.navigation.push('BarDetails', { idBar: idBar })
+       }
+    
+    
     render() {
         
         return (
@@ -30,13 +33,13 @@ class BarsList extends React.Component {
                         source={require('../Images/bar-sf.png')}
                     />
                 </View>
-                <SafeAreaView>
+                <ScrollView>
                     <FlatList
                         data={bars}
                         keyExtractor={(item) => item.id.toString() }
-                        renderItem={({ item }) => <BarItem bar={item} />}
+                        renderItem={({ item }) => <BarItem bar={item} displayDetailBar={this._displayDetailBar} />}
                     />       
-                </SafeAreaView>
+                </ScrollView>
             
             </View>
             
@@ -65,8 +68,8 @@ const styles = StyleSheet.create({
     },
     logo: {
         width:80,
-        height:80,
-        textAlignVertical: "center",
+        height:80
+        
     }
 });
 
