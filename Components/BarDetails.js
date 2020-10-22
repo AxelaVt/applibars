@@ -1,6 +1,5 @@
 import React from 'react'
-import { StyleSheet, FlatList, Text, View, SafeAreaView, StatusBar, Image, ActivityIndicator, ScrollView } from 'react-native'
-import bars from '../Helpers/bars'
+import { StyleSheet, FlatList, Text, View, SafeAreaView, StatusBar, Image, ActivityIndicator, ScrollView, TouchableOpacity, Linking } from 'react-native'
 import { getSingleBar } from '../API/barApi'
 
 
@@ -12,13 +11,12 @@ class BarDetails extends React.Component {
         super(props)
         this.state = {
             bar: undefined,
-            isLoading:true
-            
+            isLoading:true            
         }
     }
 
     componentDidMount() {
-        console.log(this.props.route.params);
+        //console.log(this.props.route.params);
         getSingleBar(this.props.route.params.idBar).then((data) => {
             this.setState({
                 bar: data
@@ -36,9 +34,32 @@ class BarDetails extends React.Component {
         }
     }
 
+    _displayReseau() {
+        
+        if (this.state.bar != undefined && this.state.bar.reseau_sociaux != undefined) {
+            const { bar } = this.state
+            const { reseau } = bar.reseau_sociaux
+            return (
+            <TouchableOpacity
+                onPress={() => Linking.openURL(bar.reseau_sociaux.substr(11))}>
+                <Image
+                    style={styles.logo}
+                    source={require('../Images/facebook.png')}
+                />
+            </TouchableOpacity>
+            )
+        } else {
+            return (
+                <Text style={styles.default_text}>Aucun réseau social enregistré</Text>
+            )
+        }
+    
+    }
+
     _displayDetailBar() {
-        const {bar} = this.state
+        
         if (this.state.bar != undefined) {
+            const { bar } = this.state
             return (
                 <ScrollView style={styles.scrollview_container}>
                     <View style={styles.content_container}>
@@ -49,12 +70,9 @@ class BarDetails extends React.Component {
                         </View>
                         <View style={styles.description_container}>
                             <Text style={styles.default_text} numberOfLines={8}>{bar.horaire_jour}</Text>
-
-                        </View>
-                        <View style={styles.reseau_container}>
-                            <Text style={styles.default_text}>{bar.reseau_sociaux}</Text>
                         </View>
                     </View>
+                    
                     
                 </ScrollView>
             );
@@ -68,6 +86,7 @@ class BarDetails extends React.Component {
 
             <View>
                 {this._displayDetailBar()}
+                {this._displayReseau()}
             </View>
 
         )
@@ -125,9 +144,9 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         color: 'blue'
     },
-    favorite_image: {
-        width: 25,
-        height: 25,
+    logo: {
+        width: 60,
+        height: 60,
         marginRight: 5
     }
 })
