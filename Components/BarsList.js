@@ -1,9 +1,9 @@
 
 import React from 'react'
 import { StyleSheet, FlatList, Text, View, ScrollView, StatusBar, Image } from 'react-native'
-import bars from '../Helpers/bars'
+import { getBar } from '../API/barApi'
 import BarItem from './BarItem'
-
+import BarDetails from './BarDetails'
 
 class BarsList extends React.Component {
   
@@ -11,20 +11,34 @@ class BarsList extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            bars : [],
             titre: "Never'sBar"
         }
     }
-    
+
+    componentDidMount() {
+        getBar().then((data) => {
+            this.setState({
+                bars: data
+            })
+        }) 
+    }
+
     _displayDetailBar = (idBar) => {
         console.log("Display bar " + idBar)
-        this.props.navigation.push('BarDetails', { idBar: idBar })
+        this.props.navigation.navigate('Details', {
+            screen: 'Details',
+            params: { idBar: idBar },
+        })
+        
        }
     
     
     render() {
         
-        return (
+        console.log(this.state)
 
+        return (
             <View style={styles.container}>
                 <View style={styles.title_container}>              
                     <Text style={styles.title}>{this.state.titre}</Text>
@@ -35,10 +49,10 @@ class BarsList extends React.Component {
                 </View>
                 <ScrollView>
                     <FlatList
-                        data={bars}
+                        data={this.state.bars}
                         keyExtractor={(item) => item.id.toString() }
                         renderItem={({ item }) => <BarItem bar={item} displayDetailBar={this._displayDetailBar} />}
-                    />       
+                    />  
                 </ScrollView>
             
             </View>

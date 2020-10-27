@@ -1,6 +1,8 @@
-import React from 'react'
-import { StyleSheet, FlatList, Text, View, SafeAreaView, StatusBar, Image, ActivityIndicator, ScrollView, TouchableOpacity, Linking } from 'react-native'
+
+import React, {useState} from 'react';
+import { StyleSheet, FlatList, Text, View, Image, ActivityIndicator, ScrollView, TouchableOpacity, Linking, TextInput, Button } from 'react-native'
 import { getSingleBar } from '../API/barApi'
+import { getCommentsBar } from '../API/barApi'
 
 
 
@@ -11,7 +13,10 @@ class BarDetails extends React.Component {
         super(props)
         this.state = {
             bar: undefined,
-            isLoading:true            
+            comments: undefined,
+            isLoading:true,
+            //nbfav: comments.avis
+            nbfav: 12
         }
     }
 
@@ -21,6 +26,11 @@ class BarDetails extends React.Component {
             this.setState({
                 bar: data
             })        
+        })
+        getCommentsBar(this.props.route.params.idBar).then((data) => {
+            this.setState({
+                comments: data
+            })
         })
     }
 
@@ -53,45 +63,84 @@ class BarDetails extends React.Component {
                 <Text style={styles.default_text}>Aucun réseau social enregistré</Text>
             )
         }
-    
     }
+
+    // _Vote(){
+    //     const [nbfav, setCount] = useState(12) // valeur recup de la bdd ald => 12 this.state.comments.avis
+    //     const onpress = () => setCount(nbfav + 1)
+
+    //     return(
+    //         <TouchableOpacity
+    //             style={styles.title_text}
+    //             onPress={onpress}>
+    //             <Text style={styles.ad_text}>
+    //                 <Image
+    //                     style={styles.logo}
+    //                     source={require('../Images/favorite.png')}
+    //                 />{nbfav}</Text>
+    //         </TouchableOpacity>
+    //     )
+
+    // }
 
     _displayDetailBar() {
         
-        if (this.state.bar != undefined) {
+        if (this.state.bar != undefined && this.state.comments != undefined ) {
             const { bar } = this.state
+            console.log(bar)
+            //const nbfav = this.comments.state.avis // valeur recup de la bdd ald => 12 
+            const nbfav = this.state.nbfav
+            const onpress = () => this.setState({ nbfav: this.state.nbfav + 1 })
             return (
                 <ScrollView style={styles.scrollview_container}>
                     <View style={styles.content_container}>
                         <View style={styles.header_container}>
+                            <View>
                             <Text style={styles.title_text}>{bar.nom}</Text>
                             <Text style={styles.ad_text}>{bar.adresse}</Text>
                             <Text style={styles.ad_text}>{bar.telephone}</Text>
+                            </View>   
                         </View>
-                        <View style={styles.description_container}>
+                        <View style={styles.descrip_container}>
+                            <View style={styles.aside_container} >
                             <Text style={styles.default_text} numberOfLines={8}>{bar.horaire_jour}</Text>
+                            </View>
+                            <View style={styles.aside_container} >
+                                <TouchableOpacity
+                                style={styles.title_text}
+                                onPress={onpress}>
+                                <Text style={styles.ad_text}>
+                                    <Image
+                                        style={styles.logofav}
+                                        source={require('../Images/favorite.png')}
+                                    />{nbfav}</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                    
-                    
+                    </View>   
                 </ScrollView>
             );
         }
     }
+
+    
+
     render() {
         const { navigation, route } = this.props
         const {idBar} = route.params
         console.log(idBar)
         return(
 
+            <ScrollView style={styles.scrollview_container}>
             <View>
                 {this._displayDetailBar()}
                 {this._displayReseau()}
+                
             </View>
+            </ScrollView >
 
         )
-    }
-    
+    }   
 
 }
 
@@ -110,7 +159,19 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         borderBottomColor: "red",
-        borderBottomWidth: 2
+        
+    },
+    descrip_container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    aside_container:{
+        flex:1,
+        alignSelf:'center',
+        alignItems: 'center'
+            
+
     },
     content_container: {
         margin: 5
@@ -118,15 +179,20 @@ const styles = StyleSheet.create({
     header_container: {
         flex: 6,
         padding: 3
-
     },
+    
     title_text: {
         fontWeight: 'bold',
         fontSize: 24,
         flexWrap: 'wrap',
         padding: 5
     },
-    ad_text: {
+    com_text: {
+        fontSize: 14,
+        marginLeft:50
+        
+    },
+    user_text:{
         fontSize: 14,
         fontWeight: 'bold'
     },
@@ -148,7 +214,22 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         marginRight: 5
+    },
+    
+    logofav: {
+        width: 40,
+        height: 40,
+        padding: 2
+        
+    },
+    style_input: {
+        borderWidth: 1,
+        borderColor: 'red',
+        padding: 15,
+        margin: 5
     }
+    
+    
 })
 
 
