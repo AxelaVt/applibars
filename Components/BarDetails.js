@@ -21,7 +21,7 @@ class BarDetails extends React.Component {
     }
 
     componentDidMount() {
-        //console.log(this.props.route.params);
+        //console.log(this.props.route.params)
         getSingleBar(this.props.route.params.idBar).then((data) => {
             this.setState({
                 bar: data
@@ -45,18 +45,18 @@ class BarDetails extends React.Component {
     }
 
     _displayReseau() {
-        
+
         if (this.state.bar != undefined && this.state.bar.reseau_sociaux != undefined) {
             const { bar } = this.state
             const { reseau } = bar.reseau_sociaux
             return (
-            <TouchableOpacity
-                onPress={() => Linking.openURL(bar.reseau_sociaux.substr(11))}>
-                <Image
-                    style={styles.logo}
-                    source={require('../Images/facebook.png')}
-                />
-            </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => Linking.openURL(bar.reseau_sociaux.substr(11))}>
+                    <Image
+                        style={styles.logo}
+                        source={require('../Images/facebook.png')}
+                    />
+                </TouchableOpacity>
             )
         } else {
             return (
@@ -140,7 +140,7 @@ class BarDetails extends React.Component {
             </ScrollView >
 
         )
-    }   
+    }  
 
 }
 
@@ -166,11 +166,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    aside_container:{
+    aside_container: {
         flex:1,
         alignSelf:'center',
-        alignItems: 'center'
-            
+        alignItems: 'center'        
 
     },
     content_container: {
@@ -187,15 +186,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         padding: 5
     },
-    com_text: {
-        fontSize: 14,
-        marginLeft:50
-        
-    },
-    user_text:{
-        fontSize: 14,
-        fontWeight: 'bold'
-    },
+    
     description_container: {
         flex: 7,
         padding: 3
@@ -220,16 +211,14 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         padding: 2
-        
     },
     style_input: {
         borderWidth: 1,
         borderColor: 'red',
         padding: 15,
         margin: 5
-    }
-    
-    
+    },
+      
 })
 
 

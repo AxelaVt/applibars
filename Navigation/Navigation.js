@@ -68,7 +68,7 @@ function EventBarNav(props) {
             })}
             tabBarOptions={{
                 activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
+                inactiveTintColor: 'grey',
                 labelStyle: { fontSize: 14 },
             }}
         >
